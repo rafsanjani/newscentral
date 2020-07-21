@@ -5,7 +5,6 @@ import * as firebase from 'firebase-admin';
 firebase.initializeApp();
 import { categoryRouter } from './routes/categories';
 import { newsRouter } from './routes/news';
-import { RuntimeOptions } from 'firebase-functions';
 
 const app = express();
 
