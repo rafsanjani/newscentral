@@ -19,6 +19,12 @@
     },
     "ui": {
       "enabled": true
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "pubsub": {
+      "port": 8085
     }
   },
   "hosting": {
@@ -30,7 +36,7 @@
     ],
     "rewrites": [
       {
-        "source":"**",
+        "source": "**",
         "function": "myApp"
       }
     ]

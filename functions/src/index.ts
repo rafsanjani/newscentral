@@ -6,12 +6,15 @@ import * as moment from 'moment';
 firebase.initializeApp();
 import { categoryRouter } from './routes/categories';
 import { newsRouter } from './routes/news';
-import { GhanaMotionService } from './service/GhanaMotionService';
+import { MyJoyOnlineService } from './service/MyJoyOnlineService';
+
 
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+
 
 //routers
 app.use('/categories', categoryRouter);
@@ -45,15 +48,14 @@ async function refreshNews() {
         //always clear database before adding new entries
         await deleteAllItems('news');
         console.log("database cleared");
+        await new MyJoyOnlineService().fetchNews();
+        console.log("News Refreshed");
     } catch (error) {
         console.log('Error cleaning the database' + error);
     }
-
-    await new GhanaMotionService().main();
-    console.log("News Refreshed");
 }
 
-export const refreshNewsScheduler = functions.pubsub.schedule('every 30 minutes')
+export const refreshNewsScheduler = functions.pubsub.schedule('every 60 minutes')
     .onRun(async () => refreshNews());
 
 export const myApp = functions.runWith(
