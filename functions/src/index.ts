@@ -41,7 +41,7 @@ async function deleteAllItems(path: string) {
 
 
 async function refreshNews() {
-    const time = moment().format("dddd: MMMM D, YYYY HH:mm:SS");
+    const time = moment("YYYY-MM").format();
     console.log('Refreshing news items on: ' + time);
 
     try {

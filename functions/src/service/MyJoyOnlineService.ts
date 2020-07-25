@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt';
 import * as Request from 'request';
 import * as Cheerio from 'cheerio'
 import * as firebase from 'firebase-admin';
+import moment = require('moment');
 
 class MyJoyOnlineService {
     private url = "https://www.myjoyonline.com/category/news/";
@@ -39,11 +40,12 @@ class MyJoyOnlineService {
         return new Promise<News>((resolve, reject) => {
             Request(url, (error, response, html) => {
                 if (!error && response.statusCode === 200) {
-
                     const $ = Cheerio.load(html);
 
                     const title = $('.article-title > a > h1').first().text();
-                    const date = $('.article-meta > div').first().text();
+                    const date = $('.article-meta > div').first().text().trim();
+
+                
                     const imageUrl = $('.img-holder > a').first().attr('data-src')?.toString()!;
                     let content = '';
 
@@ -56,11 +58,11 @@ class MyJoyOnlineService {
                         id: bcrypt.hashSync(imageUrl, 3),
                         content: content,
                         headline: title,
-                        date: date,
+                        date: moment(date, "DD MMM YYYY hh:mma").format(),
                         category: 'politics',
                         imageUrl: imageUrl
                     }
-
+                    
                     resolve(news);
                 } else {
                     console.log(error);

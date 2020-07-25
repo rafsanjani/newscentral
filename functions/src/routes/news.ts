@@ -9,6 +9,7 @@ const newsRouter = express.Router();
 
 newsRouter.get('/', async (req, res) => {
     const items: FirebaseFirestore.DocumentData[] = [];
+
     try {
         const snapshot = await newsRef.get();
         snapshot.docs.forEach(element => {
@@ -24,7 +25,7 @@ newsRouter.get('/', async (req, res) => {
         } else {
             res.status(200).send({
                 status: "OK",
-                message: "Fetch successful!",
+                message: `Fetch successful! ${items.length} items`,
                 news: items
             });
         }
@@ -34,7 +35,7 @@ newsRouter.get('/', async (req, res) => {
     }
 });
 
-// //only used for debugging
+// //only used for debugging news should be added automatically by cloud logging function
 // newsRouter.get("/add", async (req, res) => {
 //     try {
 //         const result = await new GhanaMotionService().main();
