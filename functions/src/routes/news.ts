@@ -1,9 +1,7 @@
 import * as express from 'express';
 import * as firebase from 'firebase-admin';
 
-
-
-const newsRef = firebase.firestore().collection("news");
+const newsRef = firebase.firestore().collection("news").orderBy("date", "desc");
 
 const newsRouter = express.Router();
 
@@ -34,15 +32,5 @@ newsRouter.get('/', async (req, res) => {
         res.status(401).send(error);
     }
 });
-
-// //only used for debugging news should be added automatically by cloud logging function
-// newsRouter.get("/add", async (req, res) => {
-//     try {
-//         const result = await new GhanaMotionService().main();
-//         res.status(200).send(result);
-//     } catch (error) {
-//         res.status(401).send(error);
-//     }
-// });
 
 export { newsRouter };
