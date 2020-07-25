@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as express from 'express';
 import * as firebase from 'firebase-admin';
-import * as moment from 'moment';
+
 
 firebase.initializeApp();
 import { categoryRouter } from './routes/categories';
@@ -41,17 +41,16 @@ async function deleteAllItems(path: string) {
 
 
 async function refreshNews() {
-    const time = moment("YYYY-MM").format();
-    console.log('Refreshing news items on: ' + time);
+    functions.logger.info(`Refreshing news`);
 
     try {
         //always clear database before adding new entries
         await deleteAllItems('news');
-        console.log("database cleared");
+        functions.logger.info("database cleared");
         await new MyJoyOnlineService().fetchNews();
-        console.log("News Refreshed");
+        functions.logger.info("News Refreshed");
     } catch (error) {
-        console.log('Error cleaning the database' + error);
+        functions.logger.error('Error cleaning the database' + error);
     }
 }
 

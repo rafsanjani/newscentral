@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt';
 import * as Request from 'request';
 import * as Cheerio from 'cheerio'
 import * as firebase from 'firebase-admin';
+import * as functions from 'firebase-functions';
 import moment = require('moment');
 
 class MyJoyOnlineService {
@@ -20,7 +21,7 @@ class MyJoyOnlineService {
 
             await this.saveNewsItems(newsItems);
         } catch (error) {
-            console.log(error);
+            functions.logger.error(error);
         }
     }
 
@@ -28,9 +29,9 @@ class MyJoyOnlineService {
         for (const news of newsItems) {
             try {
                 const savedNews = await this.db.doc().set(news);
-                console.log("Saved", savedNews.writeTime);
+                functions.logger.debug("Saved", savedNews.writeTime);
             } catch (error) {
-                console.log("Failed: ", error)
+                functions.logger.error(error);
             }
         }
 
@@ -65,7 +66,7 @@ class MyJoyOnlineService {
                     
                     resolve(news);
                 } else {
-                    console.log(error);
+                    functions.logger.error(error);
                     reject(error);
                 }
             })
@@ -91,7 +92,7 @@ class MyJoyOnlineService {
 
                 } else {
                     reject(error)
-                    console.log(error);
+                    functions.logger.log(error);
                 }
 
                 resolve(newsUrls);
