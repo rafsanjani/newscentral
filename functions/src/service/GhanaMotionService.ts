@@ -39,13 +39,13 @@ class GhanaMotionService implements NewsService {
                 let content = ' ';
 
                 //grab individual paragraphs from article, concatenate them together and separate them using a newline character
-                $('.entry > p').each(function (this: CheerioStatic) {
+                $('.entry > p').each(function (this: cheerio.Cheerio) {
                     const paragraph = $(this).text();
                     content = content.concat(paragraph, '\n'); //append a newline character after each paragraph
                 });
 
                 //some articles may contain quotes
-                $('.entry > blockquote > p').each(function (this: CheerioStatic) {
+                $('.entry > blockquote > p').each(function (this: cheerio.Cheerio) {
                     const paragraph = $(this).text().trim();
 
                     if (paragraph.length !== 0)
@@ -138,7 +138,7 @@ class GhanaMotionService implements NewsService {
                     if (!error && response.statusCode === 200) {
                         const $ = Cheerio.load(html);
 
-                        $('.post-box-title > a').each(function (this: CheerioStatic) {
+                        $('.post-box-title > a').each(function (this: cheerio.Cheerio) {
                             const newsItemUrl: string = $(this).attr('href')!;
                             newsUrls.push(newsItemUrl);
                         });

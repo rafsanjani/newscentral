@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as firebase from 'firebase-admin';
+import * as functions from 'firebase-functions';
 
 const newsRef = firebase.firestore().collection("news").orderBy("date", "desc");
 
@@ -15,7 +16,7 @@ newsRouter.get('/', async (req, res) => {
         });
 
         if (items.length === 0) {
-            res.status(400).send({
+            res.status(204).send({
                 status: "OK",
                 message: "No news item found",
                 news: items
@@ -29,6 +30,7 @@ newsRouter.get('/', async (req, res) => {
         }
 
     } catch (error) {
+        functions.logger.error(error);
         res.status(401).send(error);
     }
 });

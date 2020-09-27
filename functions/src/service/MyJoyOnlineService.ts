@@ -22,6 +22,7 @@ class MyJoyOnlineService {
             await this.saveNewsItems(newsItems);
         } catch (error) {
             functions.logger.error(error);
+            throw(error)
         }
     }
 
@@ -50,7 +51,7 @@ class MyJoyOnlineService {
                     const imageUrl = $('.img-holder > a').first().attr('data-src')?.toString()!;
                     let content = '';
 
-                    $('#article-text > p').each(function (this: CheerioStatic) {
+                    $('#article-text > p').each(function (this: cheerio.Cheerio) {
                         const paragraph = $(this).text();
                         content = content.concat(paragraph, '\n'); //append a newline character after each paragraph
                     });
