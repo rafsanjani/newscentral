@@ -67,7 +67,7 @@ async function refreshNews() {
     }
 }
 
-export const refreshNewsScheduler = functions.pubsub.schedule('every 60 minutes')
+export const refreshNewsScheduler = functions.pubsub.schedule('every 25 minutes')
     .onRun(async () => refreshNews());
 
 export const myApp = functions.runWith(

@@ -94,9 +94,9 @@ class MyJoyOnlineService {
 
                     const $ = Cheerio.load(html);
 
-                    $('.most-popular-list > li > a').each(function (i, element) {
-                        newsUrls.push($(this).attr('href')!);
-                    });
+                    // $('.most-popular-list > li > a').each(function (i, element) {
+                    //     newsUrls.push($(this).attr('href')!);
+                    // });
 
                     $('.home-latest-list > li > a').each(function (i, element) {
                         newsUrls.push($(this).attr('href')!);
