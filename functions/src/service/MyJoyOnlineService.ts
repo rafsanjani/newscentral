@@ -36,10 +36,12 @@ class MyJoyOnlineService {
 
                 if (data.size >= 1) {
                     functions.logger.debug(`Title: ${news.headline} exists. Skipping!`)
-                }
+                    return
+                } 
 
                 const savedNews = await this.db.doc().set(news);
                 functions.logger.debug("Saved", savedNews.writeTime);
+                
             } catch (error) {
                 functions.logger.error(error);
             }
