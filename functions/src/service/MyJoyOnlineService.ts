@@ -68,7 +68,7 @@ class MyJoyOnlineService {
                     const news: News = {
                         id: bcrypt.hashSync(imageUrl, 3),
                         content: content,
-                        headline: title,
+                        headline: title.trim(),
                         date: moment(date, "DD MMM YYYY hh:mma").format(),
                         category: 'politics',
                         imageUrl: imageUrl

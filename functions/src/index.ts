@@ -33,24 +33,24 @@ app.get("/", (req, res)=>{
     res.send("Cloud functions running!")
 })
 
-async function deleteAllItems(path: string) {
-    try {
-        functions.logger.info("Purging Database")
-        // Get a new write batch
-        const batch = firebase.firestore().batch();
-        const documents = await firebase.firestore().collection(path).listDocuments();
+// async function deleteAllItems(path: string) {
+//     try {
+//         functions.logger.info("Purging Database")
+//         // Get a new write batch
+//         const batch = firebase.firestore().batch();
+//         const documents = await firebase.firestore().collection(path).listDocuments();
 
-        documents.map((val) => {
-            batch.delete(val);
-        });
+//         documents.map((val) => {
+//             batch.delete(val);
+//         });
 
-        await batch.commit();
+//         await batch.commit();
 
-        functions.logger.info("Database Purged")
-    } catch (error) {
-        functions.logger.error(error);
-    }
-}
+//         functions.logger.info("Database Purged")
+//     } catch (error) {
+//         functions.logger.error(error);
+//     }
+// }
 
 
 async function refreshNews() {
@@ -58,7 +58,7 @@ async function refreshNews() {
 
     try {
         //always clear database before adding new entries
-        await deleteAllItems('news');
+        // await deleteAllItems('news');
         await new MyJoyOnlineService().fetchNews();
         functions.logger.info("News Refreshed");
     } catch (error) {
