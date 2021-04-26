@@ -22,13 +22,22 @@ class MyJoyOnlineService {
             await this.saveNewsItems(newsItems);
         } catch (error) {
             functions.logger.error(error);
-            throw(error)
+            throw (error)
         }
     }
 
     private async saveNewsItems(newsItems: News[]) {
         for (const news of newsItems) {
             try {
+                //check if a similar news item with the same title exists before attempting to save it
+                const query = this.db.where("headline", "==", news.headline);
+
+                const data = await query.get();
+
+                if (data.size >= 1) {
+                    functions.logger.debug(`Title: ${news.headline} exists. Skipping!`)
+                }
+
                 const savedNews = await this.db.doc().set(news);
                 functions.logger.debug("Saved", savedNews.writeTime);
             } catch (error) {
@@ -47,7 +56,7 @@ class MyJoyOnlineService {
                     const title = $('.article-title > a > h1').first().text();
                     const date = $('.article-meta > div').first().text().trim();
 
-                
+
                     const imageUrl = $('.img-holder > a').first().attr('data-src')?.toString()!;
                     let content = '';
 
@@ -64,7 +73,7 @@ class MyJoyOnlineService {
                         category: 'politics',
                         imageUrl: imageUrl
                     }
-                    
+
                     resolve(news);
                 } else {
                     functions.logger.error(error);
