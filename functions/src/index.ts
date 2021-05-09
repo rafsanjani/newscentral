@@ -7,6 +7,8 @@ firebase.initializeApp();
 import { categoryRouter } from './routes/categories';
 import { newsRouter } from './routes/news';
 import { MyJoyOnlineService } from './service/MyJoyOnlineService';
+// import moment = require('moment');
+
 
 const app = express();
 
@@ -29,20 +31,30 @@ app.get("/refresh", async (req, res) => {
     }
 });
 
-app.get("/", (req, res)=>{
+app.get("/", (req, res) => {
     res.send("Cloud functions running!")
 })
 
-// async function deleteAllItems(path: string) {
+// async function deleteOldItems() {
 //     try {
-//         functions.logger.info("Purging Database")
+//         functions.logger.info("Deleting all items older than 1 week")
 //         // Get a new write batch
 //         const batch = firebase.firestore().batch();
-//         const documents = await firebase.firestore().collection(path).listDocuments();
 
-//         documents.map((val) => {
-//             batch.delete(val);
-//         });
+//         const documents = firebase
+//             .firestore()
+//             .collection("news")
+//             .where("date", '<=', moment().subtract(15, 'days'))
+
+//         documents.get()
+//             .then(snapshot => {
+//                 snapshot.docs.forEach(doc => {
+//                     batch.delete(doc.ref);
+//                 })
+//             })
+//             .catch(error => {
+//                 functions.logger.error(error);
+//             })
 
 //         await batch.commit();
 

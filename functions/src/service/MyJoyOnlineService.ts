@@ -67,11 +67,12 @@ class MyJoyOnlineService {
                         content = content.concat(paragraph, '\n'); //append a newline character after each paragraph
                     });
 
+                 
                     const news: News = {
                         id: bcrypt.hashSync(imageUrl, 3),
                         content: content,
                         headline: title.trim(),
-                        date: moment(date, "DD MMM YYYY hh:mma").format(),
+                        date: moment(date, "DD MMM YYYY hh:mma").toDate(),
                         category: 'politics',
                         imageUrl: imageUrl
                     }

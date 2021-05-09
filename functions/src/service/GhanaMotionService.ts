@@ -3,6 +3,7 @@ import * as Cheerio from 'cheerio';
 import * as firebase from 'firebase-admin';
 import * as bcrypt from 'bcrypt';
 import { NewsService } from './NewsService';
+import moment = require('moment');
 
 
 const PAGE_LENGTH: Number = 3;
@@ -58,7 +59,7 @@ class GhanaMotionService implements NewsService {
                         id: bcrypt.hashSync(imageUrl, 3),
                         headline: headline,
                         content: content.trimLeft().trimRight(),
-                        date: date,
+                        date: moment(date).toDate(),
                         imageUrl: imageUrl!,
                         category: 'politics'
                     };
