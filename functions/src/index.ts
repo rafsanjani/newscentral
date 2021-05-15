@@ -7,6 +7,7 @@ firebase.initializeApp();
 import { categoryRouter } from './routes/categories';
 import { newsRouter } from './routes/news';
 import { MyJoyOnlineService } from './service/MyJoyOnlineService';
+import moment = require('moment');
 // import moment = require('moment');
 
 
@@ -35,34 +36,35 @@ app.get("/", (req, res) => {
     res.send("Cloud functions running!")
 })
 
-// async function deleteOldItems() {
-//     try {
-//         functions.logger.info("Deleting all items older than 1 week")
-//         // Get a new write batch
-//         const batch = firebase.firestore().batch();
+async function deleteOldItems() {
+    try {
+        functions.logger.info("Deleting all items older than 1 week")
 
-//         const documents = firebase
-//             .firestore()
-//             .collection("news")
-//             .where("date", '<=', moment().subtract(15, 'days'))
+        // Get a new write batch
+        const batch = firebase.firestore().batch();
 
-//         documents.get()
-//             .then(snapshot => {
-//                 snapshot.docs.forEach(doc => {
-//                     batch.delete(doc.ref);
-//                 })
-//             })
-//             .catch(error => {
-//                 functions.logger.error(error);
-//             })
+        const documents = firebase
+            .firestore()
+            .collection("news")
+            .where("date", '<=', moment().subtract(7, 'days'))
 
-//         await batch.commit();
+        documents.get()
+            .then(snapshot => {
+                snapshot.docs.forEach(doc => {
+                    batch.delete(doc.ref);
+                })
+            })
+            .catch(error => {
+                functions.logger.error(error);
+            })
 
-//         functions.logger.info("Database Purged")
-//     } catch (error) {
-//         functions.logger.error(error);
-//     }
-// }
+        await batch.commit();
+
+        functions.logger.info("Deleted all items older than 1 week")
+    } catch (error) {
+        functions.logger.error(error);
+    }
+}
 
 
 async function refreshNews() {
@@ -79,8 +81,12 @@ async function refreshNews() {
     }
 }
 
-export const refreshNewsScheduler = functions.pubsub.schedule('every 25 minutes')
+export const Refresh = functions.pubsub.schedule('every 25 minutes')
     .onRun(async () => refreshNews());
+
+export const DeleteOldItems = functions.pubsub.schedule('6 10 * * *')
+    .timeZone("Europe/London")
+    .onRun(async () => deleteOldItems())
 
 export const myApp = functions.runWith(
     {
