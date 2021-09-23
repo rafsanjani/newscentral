@@ -1,8 +1,8 @@
-import * as bcrypt from 'bcrypt';
 import * as Request from 'request';
 import * as Cheerio from 'cheerio'
 import * as firebase from 'firebase-admin';
 import * as functions from 'firebase-functions';
+import { v4 as uuidv4 } from 'uuid';
 import moment = require('moment');
 
 class MyJoyOnlineService {
@@ -58,8 +58,7 @@ class MyJoyOnlineService {
                     const title = $('.article-title > a > h1').first().text();
                     const date = $('.article-meta > div').first().text().trim();
 
-
-                    const imageUrl = $('.img-holder > a').first().attr('data-src')?.toString()!;
+                    const imageUrl = $('.img-holder > a > img').first().attr('data-src')?.toString()!;
                     let content = '';
 
                     $('#article-text > p').each(function (this: cheerio.Cheerio) {
@@ -69,14 +68,14 @@ class MyJoyOnlineService {
 
                  
                     const news: News = {
-                        id: bcrypt.hashSync(imageUrl, 3),
+                        id: uuidv4(),
                         content: content,
                         headline: title.trim(),
                         date: moment(date, "DD MMM YYYY hh:mma").toDate(),
                         category: 'politics',
                         imageUrl: imageUrl
                     }
-
+                    
                     resolve(news);
                 } else {
                     functions.logger.error(error);

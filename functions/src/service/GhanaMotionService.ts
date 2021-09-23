@@ -1,7 +1,7 @@
 import * as Request from 'request';
 import * as Cheerio from 'cheerio';
 import * as firebase from 'firebase-admin';
-import * as bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
 import { NewsService } from './NewsService';
 import moment = require('moment');
 
@@ -56,7 +56,7 @@ class GhanaMotionService implements NewsService {
 
                 try {
                     const newsItem: News = {
-                        id: bcrypt.hashSync(imageUrl, 3),
+                        id: uuidv4(),
                         headline: headline,
                         content: content.trimLeft().trimRight(),
                         date: moment(date).toDate(),
