@@ -2,15 +2,16 @@ import * as functions from 'firebase-functions';
 import * as express from 'express';
 import * as firebase from 'firebase-admin';
 
-firebase.initializeApp();
+const admin = firebase
+const firestore = admin.firestore
+
+admin.initializeApp();
 
 import { categoryRouter } from './routes/categories';
 import { newsRouter } from './routes/news';
 import { MyJoyOnlineService } from './service/MyJoyOnlineService';
-import { firestore } from 'firebase-admin';
+
 import moment = require('moment');
-// import moment = require('moment');
-// import moment = require('moment');
 
 
 const app = express();
@@ -63,7 +64,7 @@ async function deleteOldItems() {
 
 let deletedItems = 0;
 
-async function deleteQueryBatch(query: firestore.Query, callback: (numbers: number) => void) {
+async function deleteQueryBatch(query: FirebaseFirestore.Query, callback: (numbers: number) => void) {
     const snapshot = await query.get();
 
     const batchSize = snapshot.size;
