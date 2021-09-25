@@ -105,7 +105,7 @@ async function refreshNews() {
 export const Refresh = functions.pubsub.schedule('every 50 minutes')
     .onRun(async () => refreshNews());
 
-export const DeleteOldItems = functions.pubsub.schedule('every 10 hours')
+export const DeleteOldItems = functions.pubsub.schedule('every 20 hours')
     .timeZone("Europe/London")
     .onRun(async () => deleteOldItems())
 
