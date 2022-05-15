@@ -58,7 +58,7 @@ class MyJoyOnlineService {
                     const title = $('.article-title > a > h1').first().text();
                     const date = $('.article-meta > div').first().text().trim();
 
-                    const imageUrl = $('.img-holder > a > img').first().attr('data-src')?.toString()!;
+                    const imageUrl = $('.article-thumb').first().attr('src')?.toString()!;
                     let content = '';
 
                     $('#article-text > p').each(function (this: cheerio.Cheerio) {
@@ -75,7 +75,6 @@ class MyJoyOnlineService {
                         category: 'politics',
                         imageUrl: imageUrl
                     }
-                    
                     resolve(news);
                 } else {
                     functions.logger.error(error);
