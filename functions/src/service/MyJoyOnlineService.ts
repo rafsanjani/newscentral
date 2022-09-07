@@ -58,7 +58,7 @@ class MyJoyOnlineService {
                     const title = $('.article-title > a > h1').first().text();
                     const date = $('.article-meta > div').first().text().trim();
 
-                    const imageUrl = $('.article-thumb').first().attr('src')?.toString()!;
+                    const imageUrl = $('.article-thumb lazy loaded').first().attr('src')?.toString()!;
                     let content = '';
 
                     $('#article-text > p').each(function (this: cheerio.Cheerio) {
