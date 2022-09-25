@@ -58,7 +58,8 @@ class MyJoyOnlineService {
                     const title = $('.article-title > a > h1').first().text();
                     const date = $('.article-meta > div').first().text().trim();
 
-                    const imageUrl = $('.article-thumb lazy loaded').first().attr('src')?.toString()!;
+                    const imageUrl: string = $('.img-holder > a > img').first().attr('data-src')?.toString() || "Image not found!";
+
                     let content = '';
 
                     $('#article-text > p').each(function (this: cheerio.Cheerio) {
@@ -66,7 +67,6 @@ class MyJoyOnlineService {
                         content = content.concat(paragraph, '\n'); //append a newline character after each paragraph
                     });
 
-                 
                     const news: News = {
                         id: uuidv4(),
                         content: content,
@@ -93,9 +93,6 @@ class MyJoyOnlineService {
 
                     const $ = Cheerio.load(html);
 
-                    // $('.most-popular-list > li > a').each(function (i, element) {
-                    //     newsUrls.push($(this).attr('href')!);
-                    // });
 
                     $('.home-latest-list > li > a').each(function (i, element) {
                         newsUrls.push($(this).attr('href')!);
