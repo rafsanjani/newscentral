@@ -1,18 +1,17 @@
 import * as functions from 'firebase-functions';
 import * as express from 'express';
 import * as firebase from 'firebase-admin';
+import {categoryRouter} from './routes/categories';
+import {newsRouter} from './routes/news';
+import {fetchNews} from "./service/news_service";
 
 const admin = firebase
 const firestore = admin.firestore
 
-admin.initializeApp();
 
-import { categoryRouter } from './routes/categories';
-import { newsRouter } from './routes/news';
-import { MyJoyOnlineService } from './service/MyJoyOnlineService';
-
-import moment = require('moment');
-
+if (admin.apps?.length === 0) {
+    admin.initializeApp();
+}
 
 const app = express();
 
@@ -23,23 +22,23 @@ app.use(express.json());
 app.use('/categories', categoryRouter);
 app.use('/news', newsRouter);
 
-app.get("/refresh", async (req, res) => {
+app.get("/refresh", async (_: express.Request, res: express.Response) => {
     functions.logger.info("Refresh Job manually triggered!");
 
     try {
+        res.send("Refresh command received. News will be refreshed");
         await refreshNews();
-        res.send("Refreshing news, please wait");
     } catch (error) {
         functions.logger.error(error);
         res.send(error);
     }
 });
 
-app.get("/cleanup", async (req, res) => {
+app.get("/cleanup", async () => {
     await deleteOldItems();
 });
 
-app.get("/", (req, res) => {
+app.get("/", (req: express.Request, res: express.Response) => {
     res.send("Cloud functions running!");
 })
 
@@ -47,14 +46,19 @@ async function deleteOldItems() {
     try {
         functions.logger.info("Deleting all items older than 1 week");
 
+        // Subtract 7 days from today and delete the news items from that day
+        const today = new Date()
+        today.setDate(today.getDate() - 7)
+
         const documents = firebase
             .firestore()
             .collection("news")
-            .where("date", '<=', firestore.Timestamp.fromDate(moment().subtract(7, "days").toDate()));
+            .where("date", '<=', firestore.Timestamp.fromDate(today));
 
 
         await deleteQueryBatch(documents, (count) => {
-            functions.logger.log(`Deleted ${count} older items. Good job!`)
+            functions.logger.log(
+                `Deleted all fetched on ${today}. ${count} older items deleted. Good job!`)
         });
 
     } catch (error) {
@@ -88,17 +92,14 @@ async function deleteQueryBatch(query: FirebaseFirestore.Query, callback: (numbe
     });
 }
 
-
 async function refreshNews() {
     functions.logger.info(`Refreshing news contents`);
 
     try {
-        //always clear database before adding new entries
-        // await deleteAllItems('news');
-        await new MyJoyOnlineService().fetchNews();
+        await fetchNews();
         functions.logger.info("News Refreshed");
     } catch (error) {
-        functions.logger.error('Error cleaning the database' + error);
+        functions.logger.error('Error cleaning the database ' + error);
         throw (error)
     }
 }

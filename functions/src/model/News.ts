@@ -1,4 +1,4 @@
-interface News {
+export interface News {
     id: String,
     headline: String,
     date: Date,

@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as firebase from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import moment = require('moment');
+import {News} from "../model/News";
 
 const newsRouter = express.Router();
 
@@ -14,7 +14,7 @@ newsRouter.get('/page/:pageNumber', async (req, res) => {
     const ref = firebase
         .firestore()
         .collection("news")
-        .where('date', '<=', moment())
+        .where('date', '<=', new Date())
         .orderBy("date", "desc")
         .offset(Number(req.params.pageNumber) * 10 - 10)
         .limit(10);
