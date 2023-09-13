@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "ardent-gate-173721"
-  }
+    "default": "ardent-gate-173721",
+    "newscentral": "ardent-gate-173721"
+  },
+  "targets": {},
+  "etags": {}
 }

@@ -4,6 +4,7 @@ import axios, {AxiosError} from "axios";
 import {News} from "../model/News";
 import * as Cheerio from "cheerio";
 import {v4 as uuidv4} from 'uuid';
+import TagElement = cheerio.TagElement;
 
 const admin = firebase
 
@@ -12,10 +13,9 @@ if (admin.apps?.length === 0) {
 }
 
 // class News_service {
-const BASE_NEWS_URL = "https://www.ghanaweb.com";
+const BASE_NEWS_URL = "http://peacefmonline.com/";
 
-const newsPath = "/GhanaHomePage/NewsArchive/"
-
+const newsPath = "pages/politics/"
 
 const firestoreCollection = firebase.firestore().collection("news");
 
@@ -70,8 +70,8 @@ async function getNewsItem(url: string): Promise<News> {
     const $ = Cheerio.load(responseData, {lowerCaseAttributeNames: true})
 
     const headline = $("h1").first().text()
-    const imageUrl = $(".article-image > a > img").attr("src") ?? ""
-    const content = $("#article-123").text()
+    const imageUrl = $(".wp-image-133").attr("src") ?? ""
+    const content = $(".content-inner > p").text()
     const news: News = {
         headline: headline,
         imageUrl: imageUrl,
@@ -99,18 +99,17 @@ async function getUrls(): Promise<string[]> {
         responseData, {lowerCaseAttributeNames: true}
     );
 
-
-    const headlinesSelector = $('#load_headlines > li > a')
+    const headlinesSelector = $('.jeg_thumb > a')
 
     headlinesSelector.each((index: Number, element) => {
-        const url = $(element).first().attr("href")
+        const url = element as TagElement
 
         if (url !== undefined) {
             newsUrls.push(
-                `${BASE_NEWS_URL}${url}`
+                url.attribs['href']
             )
         }
     })
 
-    return newsUrls
+    return newsUrls.filter((item) => item.includes(BASE_NEWS_URL))
 }
